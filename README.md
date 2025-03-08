@@ -4,7 +4,7 @@
 
 Hey everyone! Welcome back to **The AI Language**. Today, we’re building an **MCP server that can execute terminal commands**. This means you can ask **Claude for Desktop** to run commands on your computer and send back the output, just like using a terminal but through AI.
 
-https://youtu.be/_veLqeCzdIQ
+[![Tutorial video](https://img.youtube.com/vi/_veLqeCzdIQ/maxresdefault.jpg)](https://youtu.be/_veLqeCzdIQ)
 
 Before we begin, if you enjoy learning about AI, coding, and automation, please **like this video and subscribe** to the channel. It really helps us bring more tutorials your way! Now, let’s get started!
 
