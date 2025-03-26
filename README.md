@@ -2,196 +2,195 @@
 
 ## Introduction
 
-Hey everyone! Welcome back to **The AI Language**. Today, we’re building an **MCP server that can execute terminal commands**. This means you can ask **Claude for Desktop** to run commands on your computer and send back the output, just like using a terminal but through AI.
+Hey everyone! Welcome back to **The AI Language**. In this project, we’re building an **MCP server that can execute terminal commands**. This allows you to ask **Claude for Desktop** to run commands on your computer and return the output — like using a terminal, but powered by AI!
 
-[![Tutorial video](https://img.youtube.com/vi/_veLqeCzdIQ/maxresdefault.jpg)](https://youtu.be/_veLqeCzdIQ)
+> 🎥 Video tutorials:
+>
+> - **Without Docker:** [Watch here](https://youtu.be/_veLqeCzdIQ)
+> - **With Docker:** [Watch here](https://youtu.be/cgml6yzrOjc)
 
-Before we begin, if you enjoy learning about AI, coding, and automation, please **like this video and subscribe** to the channel. It really helps us bring more tutorials your way! Now, let’s get started!
+If you enjoy learning about AI, coding, and automation, please **like and subscribe** to the channel — it really helps us make more great content for you!
 
 ---
 
 ## What is MCP?
 
-**MCP (Model Context Protocol)** is a system that lets AI interact with external tools and fetch information. MCP servers can do three things:
+**MCP (Model Context Protocol)** is a system that allows AI models to:
 
 - **Store data** (like files or API responses)
 - **Run tools** (functions that AI can execute)
 - **Use prompts** (predefined templates for tasks)
 
-Today, we’re building a tool that takes a command, runs it in the terminal, and sends back the output.
+In this tutorial, we’re building a tool that takes a command, runs it in the terminal, and sends back the output.
 
 ---
 
-## Installing Claude for Desktop
+## Two Ways to Set Up Your MCP Server
 
-First, install **Claude for Desktop** from [Claude’s website](https://claude.ai). It allows us to test MCP integrations easily.
+You can run your MCP server **with or without Docker**:
 
-- **Mac:** Drag the app to Applications.
-- **Windows:** Follow the installer steps.
+### 🔹 Option 1: Run Directly Using Python (no Docker)
 
-Once installed, open it and log in.
+This is great for development or local experimentation.
+
+### 🔹 Option 2: Run Using Docker
+
+Perfect for clean environments and easy distribution — no need to install Python or dependencies globally.
+
+Both methods work with **Claude for Desktop**, and we’ll walk you through both.
 
 ---
 
-## Setting Up Python and the Right Tools
+## Option 1: Setup Without Docker (Local Python)
 
-We need **Python 3.10 or higher** and a tool called **uv** to manage our project. **uv** is a fast package manager for Python that helps us install and run dependencies.
+### Step 1: Install Python and `uv`
 
-To install python - https://www.python.org/downloads/
-Video link - https://www.youtube.com/watch?v=jmK0qwXBTcE
+You need **Python 3.10 or higher** and a tool called `uv`:
 
-### Step 1: Install `uv`
+- Install Python: https://www.python.org/downloads/
+- Install `uv`:
+  ```sh
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+- Fix permissions if needed:
+  ```sh
+  sudo chown -R $(whoami):staff ~/.local
+  ```
 
-#### Mac/Linux:
-```sh
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-For fixing permission issues if they occurr
-```sh
-sudo chown -R $(whoami):staff ~/.local  
-```
-
-#### Windows:
-Follow the instructions at [uv’s installation page](https://astral.sh/uv/).
-
-Restart your terminal after installation so `uv` is recognized.
-
-### Step 2: Create the MCP Directory Structure
-
-We’ll store our MCP servers inside a structured directory:
+### Step 2: Create Project Structure
 ```sh
 mkdir -p ~/mcp/servers/terminal_server
 mkdir -p ~/mcp/workspace
 cd ~/mcp/servers/terminal_server
 ```
 
-- `mcp/servers/` stores all MCP servers.
-- `mcp/workspace/` is a dedicated workspace directory.
-
-### Step 3: Set Up a Python Project
+### Step 3: Initialize and Activate Project
 ```sh
 uv init
-```
-This initializes our Python project inside `terminal_server`.
-
-### Step 4: Set Up a Virtual Environment
-```sh
 uv venv
 source .venv/bin/activate  # Mac/Linux
 # or
 .venv\Scripts\activate     # Windows
 ```
-This creates a virtual environment, which keeps our project’s dependencies separate from the system’s Python installation.
 
-### Step 5: Install Required Packages
+### Step 4: Install Required Packages
 ```sh
 uv add "mcp[cli]"
 ```
-This installs the MCP package, which allows our server to communicate with Claude.
 
----
+### Step 5: Create Your Server
+Create `terminal_server.py` and paste this:
 
-## Building the MCP Server That Executes Terminal Commands
-
-### Step 1: Create the Server File
-```sh
-touch terminal_server.py
-```
-
-### Step 2: Import the Necessary Code
 ```python
 import os
 import subprocess
+import logging
 from mcp.server.fastmcp import FastMCP
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.info("Starting Terminal Server MCP...")
 
 mcp = FastMCP("terminal")
 DEFAULT_WORKSPACE = os.path.expanduser("~/mcp/workspace")
-```
-We import the required libraries. `subprocess` lets us run terminal commands, and `FastMCP` helps us set up an MCP server. The workspace directory is always set to `~/mcp/workspace/`.
+logging.info(f"Workspace path: {DEFAULT_WORKSPACE}")
 
-### Step 3: Define the Function to Run Commands
-```python
 @mcp.tool()
-def run_command(command: str) -> str:
-    """
-    Run a terminal command inside the workspace directory.
-    
-    Args:
-        command: The shell command to run.
-    
-    Returns:
-        The command output or an error message.
-    """
+async def run_command(command: str) -> str:
+    logging.info(f"Running command: {command}")
     try:
         result = subprocess.run(command, shell=True, cwd=DEFAULT_WORKSPACE, capture_output=True, text=True)
         return result.stdout or result.stderr
     except Exception as e:
+        logging.exception("Command failed")
         return str(e)
-```
-This function takes a command, runs it inside `~/mcp/workspace/`, and returns the output.
 
-### Step 4: Start the Server
-```python
 if __name__ == "__main__":
     mcp.run(transport='stdio')
 ```
-This starts the MCP server, allowing Claude to communicate with it.
 
-Run this command to start your server:
+### Step 6: Start the Server
 ```sh
 uv run terminal_server.py
 ```
-This runs our Python script inside the virtual environment using `uv`.
 
 ---
 
-## Connecting to Claude for Desktop
+## Option 2: Setup With Docker
 
-Now, let’s tell **Claude** how to use our server. Open this file:
+### Step 1: Create a Dockerfile
+In the same folder as `terminal_server.py`, create a `Dockerfile`:
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 5000
+CMD ["python", "terminal_server.py"]
+```
+
+Make sure you have a `requirements.txt` that includes:
+```
+mcp[cli]
+```
+
+### Step 2: Build the Docker Image
+```sh
+docker build -t terminal_server_docker .
+```
+
+### Step 3: Configure Claude Desktop to Use the Docker Image
+Open:
 ```sh
 code ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
 
-Add this code inside the file (replace username with your username):
+Add:
 ```json
 {
-    "mcpServers": {
-        "terminal": {
-            "command": "/Users/<username>/.local/bin/uv",
-            "args": [
-                "--directory", "/Users/<username>/mcp/servers/terminal_server",
-                "run", 
-                "terminal_server.py"
-            ]
-        }
+  "mcpServers": {
+    "terminal_server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--init",
+        "-e", "DOCKER_CONTAINER=true",
+        "-v", "/Users/<your-username>/mcp/workspace:/root/mcp/workspace",
+        "terminal_server_docker"
+      ]
     }
+  }
 }
 ```
+> Replace `<your-username>` with your actual macOS username.
 
-Save the file and restart **Claude for Desktop**. You should see a hammer icon, which means your tool is ready.
+Then restart Claude Desktop.
 
 ---
 
 ## Testing the MCP Server
 
-Let’s test it out! In **Claude**, ask:
+In Claude, try these prompts:
 
 - `Run the command ls in my workspace.`
-- `Execute echo Hello World.`
+- `Execute echo Hello from Claude.`
 
-Claude will send the command to our server, which will execute it and return the response.
+You should see the output directly from your terminal server 🎉
 
 ---
 
 ## Wrapping Up
 
-And that’s it! We built an **MCP server** that can execute terminal commands and connected it to Claude. Now, it can run real commands on your machine!
+Congrats! You’ve built a working MCP server that executes terminal commands — and you can run it with or without Docker.
 
-Want to improve it? Try adding:
+Want to go further?
+- Add security checks to block dangerous commands
+- Let Claude write to or read from files
+- Connect to cloud or remote systems
 
-- **Security filters** to prevent unsafe commands.
-- **More features**, like reading and writing files.
-- **Cloud integration** to run commands remotely.
+👉 Let us know in the YouTube comments what you'd like to build next!
 
-Let me know in the comments what you’d like to build next! Don’t forget to **like, subscribe, and share** for more tutorials. See you next time! 🚀
+Don’t forget to **like, subscribe, and share** to support more videos like this. See you next time 🚀
 
