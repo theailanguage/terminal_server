@@ -9,7 +9,10 @@ Hey everyone! Welcome back to **The AI Language**. In this project, we’re buil
 > - **Without Docker:** [Watch here](https://youtu.be/_veLqeCzdIQ)
 > - **With Docker:** [Watch here](https://youtu.be/cgml6yzrOjc)
 
+[SUBSCRIBE](https://youtube.com/@theailanguage?sub_confirmation=1)
+
 If you enjoy learning about AI, coding, and automation, please **like and subscribe** to the channel — it really helps us make more great content for you!
+
 
 ---
 
