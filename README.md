@@ -6,8 +6,8 @@ Hey everyone! Welcome back to **The AI Language**. In this project, we’re buil
 
 > 🎥 Video tutorials:
 >
-> - **Without Docker:** [Watch here](https://youtu.be/_veLqeCzdIQ)
-> - **With Docker:** [Watch here](https://youtu.be/cgml6yzrOjc)
+> - **Without Docker:** [![Watch here](https://img.youtube.com/vi/_veLqeCzdIQ/0.jpg)](https://youtu.be/_veLqeCzdIQ)
+> - **With Docker:** [![Watch here](https://img.youtube.com/vi/cgml6yzrOjc/0.jpg)](https://youtu.be/cgml6yzrOjc)
 
 [SUBSCRIBE](https://youtube.com/@theailanguage?sub_confirmation=1)
 
