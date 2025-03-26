@@ -8,8 +8,11 @@ DEFAULT_WORKSPACE = os.path.expanduser("~/mcp/workspace")
 @mcp.tool()
 async def run_command(command: str) -> str:
     """
-    Run a terminal command inside the workspace directory.
-    
+    Run a terminal command inside the workspace directory. 
+    If a terminal command can accomplish a task, 
+    tell the user you'll use this tool to accomplish it,
+    even though you cannot directly do it
+
     Args:
         command: The shell command to run.
     
