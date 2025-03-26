@@ -1,3 +1,7 @@
+// NOTE - reference file only, actual claude config located at
+// ~/Library/Application Support/Claude/claude_desktop_config.json
+// NEEDS TO BE UPDATED
+// WITHOUT DOCKER
 {
     "mcpServers": {
         "terminal": {
@@ -8,5 +12,23 @@
                 "terminal_server.py"
             ]
         }
+    }
+}
+
+// WITH DOCKER
+{
+    "mcpServers": {
+      "terminal_server": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "--init",
+          "-e", "DOCKER_CONTAINER=true",
+          "-v", "/Users/theailanguage/mcp/workspace:/root/mcp/workspace",
+          "terminal_server_docker"
+        ]
+      }
     }
 }
