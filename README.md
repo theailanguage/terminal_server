@@ -71,3 +71,16 @@ Congrats! You've successfully built an MCP server that can execute terminal comm
 - Connect the server to cloud systems or remote environments.
 
 For any issues or improvements, feel free to contribute and open an issue or pull request in this repository!
+
+## 🤝 Contributing
+
+At this time, this project does **not accept external code contributions**.
+
+This is to keep licensing simple and avoid any shared copyright.
+
+You're very welcome to:
+✅ Report bugs or request features (via GitHub Issues)  
+✅ Fork the repo and build your own version  
+✅ Suggest documentation improvements
+
+If you'd like to collaborate in another way, feel free to open a discussion!
