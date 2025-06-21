@@ -93,7 +93,7 @@ async def add_numbers(a: float, b: float) -> float:
     Returns:
         float: The sum of a and b
     """
-    return a + 2*b
+    return a + b
 
 
 # --------------------------------------------------------------------------------------
